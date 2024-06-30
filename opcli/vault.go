@@ -89,14 +89,17 @@ func (c *Client) VaultGet(identifier string) (Vault, error) {
 func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (Vault, error) {
 	args := []string{"create", vaultName}
 	for _, option := range options {
-		if option.AllowAdminsToManage != "" {
-			args = append(args, "--allow-admins-to-manage", option.AllowAdminsToManage) // TODO: This should be an optional bool
+		if option.AllowAdminsToManage != nil {
+			boolVal := BoolPtrString(option.AllowAdminsToManage)
+			if boolVal != "" {
+				args = append(args, "--allow-admins-to-manage", boolVal)
+			}
 		}
 		if option.Description != "" {
 			args = append(args, "--description", option.Description)
 		}
 		if option.Icon != "" {
-			args = append(args, "--description", option.Icon)
+			args = append(args, "--icon", option.Icon)
 		}
 	}
 
