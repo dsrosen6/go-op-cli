@@ -18,7 +18,7 @@ func TestGetVaults(t *testing.T) {
 	}
 }
 
-func TestGetVaultsWithOptions(t *testing.T) {
+func TestVaultGetWithOptions(t *testing.T) {
 	client := Client{}
 	vaults, err := client.VaultList(VaultListOption{User: "Danny"})
 	if err != nil {
@@ -34,7 +34,7 @@ func TestGetVaultsWithOptions(t *testing.T) {
 	}
 }
 
-func TestGetVault(t *testing.T) {
+func TestVaultGet(t *testing.T) {
 	client := Client{}
 	vault, err := client.VaultGet("kfoesdlf")
 	if err != nil {
@@ -47,9 +47,9 @@ func TestGetVault(t *testing.T) {
 	}
 }
 
-func TestCreateVault(t *testing.T) {
+func TestVaultCreate(t *testing.T) {
 	client := Client{}
-	vault, err := client.VaultCreate("Test Vault (Default Admin State)", VaultCreateOption{Description: "This is a vault"})
+	vault, err := client.VaultCreate("Test Vault", VaultCreateOption{Description: "This is a vault"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,4 +57,14 @@ func TestCreateVault(t *testing.T) {
 	if vault != (Vault{}) {
 		t.Logf("Vault ID: %s", vault.ID)
 	}
+}
+
+func TestVaultDelete(t *testing.T) {
+	client := Client{}
+	err := client.VaultDelete("Test Vault")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log("Successfully deleted vault")
 }

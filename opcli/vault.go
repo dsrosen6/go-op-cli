@@ -104,3 +104,13 @@ func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOption) (Va
 	return out, nil
 
 }
+
+func (c *Client) VaultDelete(identifier string) error {
+	args := []string{"delete", identifier}
+	_, err := c.RunCommand("vault", args)
+	if err != nil {
+		return fmt.Errorf("error deleting vault %s: %s", identifier, err)
+	}
+
+	return nil
+}
