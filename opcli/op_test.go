@@ -20,7 +20,7 @@ func TestGetVaults(t *testing.T) {
 
 func TestVaultGetWithOptions(t *testing.T) {
 	client := Client{}
-	vaults, err := client.VaultList(VaultListOption{User: "Danny"})
+	vaults, err := client.VaultList(VaultListOptions{User: "Danny"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func TestVaultGet(t *testing.T) {
 
 func TestVaultCreate(t *testing.T) {
 	client := Client{}
-	vault, err := client.VaultCreate("Test Vault", VaultCreateOption{Description: "This is a vault"})
+	vault, err := client.VaultCreate("Test Vault", VaultCreateOptions{Description: "This is a vault"})
 	if err != nil {
 		t.Fatal(err)
 	}
