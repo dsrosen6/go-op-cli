@@ -28,6 +28,14 @@ type VaultCreateOptions struct {
 	Icon                string
 }
 
+// Options for editing an existing vault.
+type VaultEditOptions struct {
+	Description string
+	Icon        string
+	Name        string
+	TravelMode  *bool
+}
+
 // Full details of a 1Password vault, output of "vault get" op command
 type Vault struct {
 	ID               string    `json:"id"`
@@ -111,4 +119,33 @@ func (c *Client) VaultDelete(identifier string) error {
 	}
 
 	return nil
+}
+
+func (c *Client) VaultEdit(identifier string, options ...VaultEditOptions) error {
+	args := []string{"edit", identifier}
+	for _, option := range options {
+		if option.Description != "" {
+			args = append(args, "--description", option.Description)
+		}
+		if option.Icon != "" {
+			args = append(args, "--icon", option.Icon)
+		}
+		if option.Name != "" {
+			args = append(args, "--name", option.Name)
+		}
+		if option.TravelMode != nil {
+			boolVal := BoolPtrString(option.TravelMode)
+			if boolVal != "" {
+				args = append(args, "--travel-mode", boolVal)
+			}
+		}
+	}
+
+	_, err := c.RunCommand("vault", args)
+	if err != nil {
+		return fmt.Errorf("error editing vault %s: %s", identifier, err)
+	}
+
+	return nil
+
 }
