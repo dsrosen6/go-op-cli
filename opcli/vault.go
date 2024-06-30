@@ -13,7 +13,7 @@ type VaultListItem struct {
 }
 
 // Options for filtering the list of available vaults
-type VaultListOption struct {
+type VaultListOptions struct {
 	Group      string
 	Permission string
 	User       string
@@ -22,11 +22,8 @@ type VaultListOption struct {
 // Options for creation of a new vault.
 //
 // If AllowAdminsToManage is not provided, the default policy for the account applies.
-//
-// PLEASE NOTE: The AllowAdminsToManage field is currently using a string, but will later be changed to an optional bool.
-// For now, AllowAdminsToManage must be set to "true", "false", or not set at all.
-type VaultCreateOption struct {
-	AllowAdminsToManage string // TODO: This currently is using a string, but should be an "optional bool"
+type VaultCreateOptions struct {
+	AllowAdminsToManage *bool
 	Description         string
 	Icon                string
 }
@@ -46,7 +43,7 @@ type Vault struct {
 // Retrieves a list of available vaults with short summaries including ID, name, and content version.
 //
 // Mostly used in order to get ID and name to pass to GetVault function.
-func (c *Client) VaultList(options ...VaultListOption) ([]*VaultListItem, error) {
+func (c *Client) VaultList(options ...VaultListOptions) ([]*VaultListItem, error) {
 	args := []string{"list"}
 	for _, option := range options {
 		if option.Group != "" {
@@ -81,7 +78,7 @@ func (c *Client) VaultGet(identifier string) (Vault, error) {
 }
 
 // Creates a new vault with the specified name, plus any optional arguments.
-func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOption) (Vault, error) {
+func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (Vault, error) {
 	args := []string{"create", vaultName}
 	for _, option := range options {
 		if option.AllowAdminsToManage != "" {
