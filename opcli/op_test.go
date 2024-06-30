@@ -49,7 +49,7 @@ func TestGetVault(t *testing.T) {
 
 func TestCreateVault(t *testing.T) {
 	client := Client{}
-	vault, err := client.VaultCreate("Test Vault 2", VaultCreateOption{Description: "This is a vault"})
+	vault, err := client.VaultCreate("Test Vault (Default Admin State)", VaultCreateOption{Description: "This is a vault"})
 	if err != nil {
 		t.Fatal(err)
 	}

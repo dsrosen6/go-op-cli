@@ -20,12 +20,15 @@ type VaultListOption struct {
 }
 
 // Options for creation of a new vault.
+//
 // If AllowAdminsToManage is not provided, the default policy for the account applies.
+//
+// PLEASE NOTE: The AllowAdminsToManage field is currently using a string, but will later be changed to an optional bool.
+// For now, AllowAdminsToManage must be set to "true", "false", or not set at all.
 type VaultCreateOption struct {
-	// TODO: Find clean solution for optional bools
-	// AllowAdminsToManage *bool
-	Description string
-	Icon        string
+	AllowAdminsToManage string // TODO: This currently is using a string, but should be an "optional bool"
+	Description         string
+	Icon                string
 }
 
 // Full details of a 1Password vault, output of "vault get" op command
@@ -41,6 +44,7 @@ type Vault struct {
 }
 
 // Retrieves a list of available vaults with short summaries including ID, name, and content version.
+//
 // Mostly used in order to get ID and name to pass to GetVault function.
 func (c *Client) VaultList(options ...VaultListOption) ([]*VaultListItem, error) {
 	args := []string{"list"}
@@ -65,8 +69,7 @@ func (c *Client) VaultList(options ...VaultListOption) ([]*VaultListItem, error)
 	return out, nil
 }
 
-// Retrieves full details of a specific vault. "identifier" argument can take either
-// vault ID or vault name.
+// Retrieves full details of a specific vault. "identifier" argument can take either vault ID or vault name.
 func (c *Client) VaultGet(identifier string) (Vault, error) {
 	var out Vault
 	err := c.RunOpUnmarshal("vault", []string{"get", identifier}, &out)
@@ -77,16 +80,13 @@ func (c *Client) VaultGet(identifier string) (Vault, error) {
 	return out, nil
 }
 
+// Creates a new vault with the specified name, plus any optional arguments.
 func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOption) (Vault, error) {
 	args := []string{"create", vaultName}
 	for _, option := range options {
-		// If AllowAdminsToManage is set to true or false, add "--allow-admins-to-manage" and "true" or "false" to args
-
-		// TODO: Find clean solution for optional bools
-		// if option.AllowAdminsToManage != nil {
-		// 	boolStr := strconv.FormatBool(*option.AllowAdminsToManage)
-		// 	args = append(args, "--allow-admins-to-manage", boolStr)
-		// }
+		if option.AllowAdminsToManage != "" {
+			args = append(args, "--allow-admins-to-manage", option.AllowAdminsToManage) // TODO: This should be an optional bool
+		}
 		if option.Description != "" {
 			args = append(args, "--description", option.Description)
 		}
@@ -102,4 +102,5 @@ func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOption) (Va
 	}
 
 	return out, nil
+
 }
