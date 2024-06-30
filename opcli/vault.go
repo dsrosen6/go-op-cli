@@ -69,7 +69,7 @@ func (c *Client) VaultList(options ...VaultListOption) ([]*VaultListItem, error)
 	return out, nil
 }
 
-// Retrieves full details of a specific vault. "identifier" argument can take either vault ID or vault name.
+// Retrieves full details of a specific vault. identifier argument can take either vault ID or vault name.
 func (c *Client) VaultGet(identifier string) (Vault, error) {
 	var out Vault
 	err := c.RunOpUnmarshal("vault", []string{"get", identifier}, &out)
@@ -105,6 +105,7 @@ func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOption) (Va
 
 }
 
+// Deletes a vault. identifier argument can take either vault ID or vault name.
 func (c *Client) VaultDelete(identifier string) error {
 	args := []string{"delete", identifier}
 	_, err := c.RunCommand("vault", args)
