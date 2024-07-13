@@ -36,7 +36,7 @@ func TestVaultGetWithOptions(t *testing.T) {
 
 func TestVaultGet(t *testing.T) {
 	client := Client{}
-	vault, err := client.VaultGet("kfoesdlf")
+	vault, err := client.VaultGet("Private")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -11,7 +11,7 @@ type Client struct{}
 
 // Takes the primary op command (example: "vault") and arguments (example:
 // "list", etc...) to run the op CLI command.
-func (c *Client) RunCommand(opCmd string, args []string) ([]byte, error) {
+func (op *Client) RunCommand(opCmd string, args []string) ([]byte, error) {
 	cArgs := []string{opCmd}
 	cArgs = append(cArgs, args...)
 	cArgs = append(cArgs, "--format", "json")
@@ -31,8 +31,8 @@ func (c *Client) RunCommand(opCmd string, args []string) ([]byte, error) {
 }
 
 // Unmarshals the output JSON of c.RunCommand.
-func (c *Client) RunOpUnmarshal(opCmd string, args []string, target any) error {
-	out, err := c.RunCommand(opCmd, args)
+func (op *Client) RunOpUnmarshal(opCmd string, args []string, target any) error {
+	out, err := op.RunCommand(opCmd, args)
 	if err != nil {
 		return err
 	}

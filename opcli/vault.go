@@ -51,7 +51,7 @@ type Vault struct {
 // Retrieves a list of available vaults with short summaries including ID, name, and content version.
 //
 // Mostly used in order to get ID and name to pass to GetVault function.
-func (c *Client) VaultList(options ...VaultListOptions) ([]*VaultListItem, error) {
+func (op *Client) VaultList(options ...VaultListOptions) ([]*VaultListItem, error) {
 	args := []string{"list"}
 	for _, option := range options {
 		if option.Group != "" {
@@ -66,7 +66,7 @@ func (c *Client) VaultList(options ...VaultListOptions) ([]*VaultListItem, error
 	}
 
 	var out []*VaultListItem
-	err := c.RunOpUnmarshal("vault", args, &out)
+	err := op.RunOpUnmarshal("vault", args, &out)
 	if err != nil {
 		return nil, fmt.Errorf("error getting vaults list: %s", err)
 	}
@@ -75,9 +75,9 @@ func (c *Client) VaultList(options ...VaultListOptions) ([]*VaultListItem, error
 }
 
 // Retrieves full details of a specific vault. identifier argument can take either vault ID or vault name.
-func (c *Client) VaultGet(identifier string) (Vault, error) {
+func (op *Client) VaultGet(identifier string) (Vault, error) {
 	var out Vault
-	err := c.RunOpUnmarshal("vault", []string{"get", identifier}, &out)
+	err := op.RunOpUnmarshal("vault", []string{"get", identifier}, &out)
 	if err != nil {
 		return Vault{}, fmt.Errorf("error getting details for vault %s: %s", identifier, err)
 	}
@@ -86,7 +86,7 @@ func (c *Client) VaultGet(identifier string) (Vault, error) {
 }
 
 // Creates a new vault with the specified name, plus any optional arguments.
-func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (Vault, error) {
+func (op *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (Vault, error) {
 	args := []string{"create", vaultName}
 	for _, option := range options {
 		if option.AllowAdminsToManage != nil {
@@ -104,7 +104,7 @@ func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (V
 	}
 
 	var out Vault
-	err := c.RunOpUnmarshal("vault", args, &out)
+	err := op.RunOpUnmarshal("vault", args, &out)
 	if err != nil {
 		return Vault{}, fmt.Errorf("error creating vault %s: %s", vaultName, err)
 	}
@@ -114,9 +114,9 @@ func (c *Client) VaultCreate(vaultName string, options ...VaultCreateOptions) (V
 }
 
 // Deletes a vault. identifier argument can take either vault ID or vault name.
-func (c *Client) VaultDelete(identifier string) error {
+func (op *Client) VaultDelete(identifier string) error {
 	args := []string{"delete", identifier}
-	_, err := c.RunCommand("vault", args)
+	_, err := op.RunCommand("vault", args)
 	if err != nil {
 		return fmt.Errorf("error deleting vault %s: %s", identifier, err)
 	}
@@ -124,7 +124,7 @@ func (c *Client) VaultDelete(identifier string) error {
 	return nil
 }
 
-func (c *Client) VaultEdit(identifier string, options ...VaultEditOptions) error {
+func (op *Client) VaultEdit(identifier string, options ...VaultEditOptions) error {
 	args := []string{"edit", identifier}
 	for _, option := range options {
 		if option.Description != "" {
@@ -144,7 +144,7 @@ func (c *Client) VaultEdit(identifier string, options ...VaultEditOptions) error
 		}
 	}
 
-	_, err := c.RunCommand("vault", args)
+	_, err := op.RunCommand("vault", args)
 	if err != nil {
 		return fmt.Errorf("error editing vault %s: %s", identifier, err)
 	}
