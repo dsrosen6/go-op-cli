@@ -19,3 +19,13 @@ func TestVaultList(t *testing.T) {
 		}
 	}
 }
+
+func TestGetItemCategory(t *testing.T) {
+	op := Client{}
+	category, err := op.getItemCategory("Netflix")
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Logf("Category: %s", category)
+}

@@ -9,7 +9,7 @@ import (
 
 type Client struct{}
 
-func (op *Client) runFullCommand(mainCommand string, args []string, target any) error {
+func (op *Client) commandWithUnmarshal(mainCommand string, args []string, target any) error {
 	cmd := op.createCommand(mainCommand, args)
 	out, err := op.runCommand(cmd)
 	if err != nil {

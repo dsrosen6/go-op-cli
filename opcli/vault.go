@@ -34,7 +34,7 @@ func (op *Client) GetVaultList(options ...VaultListOptions) ([]*VaultListItem, e
 	}
 
 	var out []*VaultListItem
-	if err := op.runFullCommand("vault", args, &out); err != nil {
+	if err := op.commandWithUnmarshal("vault", args, &out); err != nil {
 		return nil, fmt.Errorf("error getting vault list: %w", err)
 	}
 
