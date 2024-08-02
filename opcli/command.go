@@ -2,28 +2,13 @@ package opcli
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"os/exec"
 )
 
-type Client struct{}
+type OpClient struct{}
 
-func runWithUnmarshal(mainCommand string, args []string, target any) error {
-	cmd := createCommand(mainCommand, args)
-	out, err := runNoUnmarshal(cmd)
-	if err != nil {
-		return err
-	}
-
-	if err := unmarshalOutput(out, target); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func runNoUnmarshal(command []string) ([]byte, error) {
+func runCommand(command []string) ([]byte, error) { // TODO: any better way?
 	cmd := exec.Command(command[0], command[1:]...)
 	errBuf := bytes.NewBuffer(nil)
 	cmd.Stderr = errBuf
@@ -42,15 +27,5 @@ func runNoUnmarshal(command []string) ([]byte, error) {
 func createCommand(mainCommand string, args []string) []string {
 	c := []string{"op", mainCommand}
 	c = append(c, args...)
-	c = append(c, "--format", "json")
 	return c
-}
-
-func unmarshalOutput(output []byte, target any) error {
-	err := json.Unmarshal(output, target)
-	if err != nil {
-		return fmt.Errorf("error unmarshaling output: %w", err)
-	}
-
-	return nil
 }
